@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专属传讯站</title>
+    <style>
+        body { font-family: Arial; background: #111; color: #fff; padding: 10px; }
+        .chat-box { background: #222; height: 70vh; border-radius: 10px; padding: 10px; overflow-y: auto; margin-bottom: 10px; }
+        .msg { margin: 5px; padding: 10px; border-radius: 15px; max-width: 70%; }
+        .user { background: #007AFF; margin-left: auto; }
+        .ta { background: #333; margin-right: auto; }
+        .input-area { display: flex; gap: 5px; }
+        input { flex: 1; padding: 12px; border: none; border-radius: 25px; background: #222; color: #fff; }
+        button { padding: 12px 20px; border: none; border-radius: 25px; background: #007AFF; color: #fff; }
+        .header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <img src="https://picsum.photos/seed/user/40" class="avatar" id="userAvatar">
+    <div id="userName">我</div>
+    <div style="flex:1;"></div>
+    <img src="https://picsum.photos/seed/ta/40" class="avatar" id="taAvatar">
+    <div id="taName">TA</div>
+</div>
+
+<div class="chat-box" id="box"></div>
+
+<div class="input-area">
+    <input id="inp" type="text" placeholder="输入讯息...">
+    <button onclick="send()">发送</button>
+</div>
+
+<script>
+let replies = JSON.parse(localStorage.getItem('replies')) || ["你终于来了。✨"];
+let history = JSON.parse(localStorage.getItem('history')) || [];
+
+function render(){
+    let box = document.getElementById('box');
+    box.innerHTML = '';
+    history.forEach(item=>{
+        let div = document.createElement('div');
+        div.className = 'msg ' + (item.type=='user'?'user':'ta');
+        div.textContent = item.text;
+        box.appendChild(div);
+    });
+    box.scrollTop = box.scrollHeight;
+}
+
+function send(){
+    let inp = document.getElementById('inp');
+    let text = inp.value.trim();
+    if(!text) return;
+
+    history.push({type:'user', text:text});
+    localStorage.setItem('history', JSON.stringify(history));
+    render();
+    inp.value = '';
+
+    setTimeout(()=>{
+        let idx = Math.floor(Math.random()*replies.length);
+        let txt = replies[idx];
+        history.push({type:'ta', text:txt});
+        localStorage.setItem('history', JSON.stringify(history));
+        render();
+    }, 600);
+}
+
+window.onload = ()=>{
+    if(history.length===0){
+        history.push({type:'ta', text:"你终于来了。✨"});
+        localStorage.setItem('history', JSON.stringify(history));
+    }
+    render();
+};
+</script>
+</body>
+</html>
