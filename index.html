@@ -20,11 +20,11 @@
 <body>
 
 <div class="header">
-    <img src="https://picsum.photos/seed/user/40" class="avatar" id="userAvatar">
-    <div id="userName">我</div>
-    <div style="flex:1;"></div>
     <img src="https://picsum.photos/seed/ta/40" class="avatar" id="taAvatar">
     <div id="taName">TA</div>
+    <div style="flex:1;"></div>
+    <img src="https://picsum.photos/seed/user/40" class="avatar" id="userAvatar">
+    <div id="userName">我</div>
 </div>
 
 <div class="chat-box" id="box"></div>
@@ -70,6 +70,12 @@ function send(){
 }
 
 window.onload = ()=>{
+    // 读取设置里的名字和头像
+    document.getElementById('userName').textContent = localStorage.getItem('userName') || '我';
+    document.getElementById('userAvatar').src = localStorage.getItem('userAvatar') || 'https://picsum.photos/seed/user/40';
+    document.getElementById('taName').textContent = localStorage.getItem('taName') || 'TA';
+    document.getElementById('taAvatar').src = localStorage.getItem('taAvatar') || 'https://picsum.photos/seed/ta/40';
+
     if(history.length===0){
         history.push({type:'ta', text:"你终于来了。✨"});
         localStorage.setItem('history', JSON.stringify(history));
